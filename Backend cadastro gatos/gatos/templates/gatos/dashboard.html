@@ -301,22 +301,27 @@
       button.classList.add('active');
     }
 
-    async function requestJson(url, options = {}) {
-      const response = await fetch(url, options);
+  async function requestJson(url, options = {}) {
+    const response = await fetch(url, options);
 
-      if (!response.ok) {
-        let errorMessage = 'Erro ao processar solicitação.';
+    if (!response.ok) {
+      let errorMessage = `Erro ${response.status} ao processar solicitação.`;
 
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.erro || errorMessage;
-        } catch {}
-
-        throw new Error(errorMessage);
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.erro || errorMessage;
+      } catch {
+        const text = await response.text();
+        if (text) {
+          errorMessage = text.slice(0, 300);
+        }
       }
 
-      return response.json();
+      throw new Error(errorMessage);
     }
+
+    return response.json();
+  }
 
     async function carregarPets() {
       const pets = await requestJson('/api/dashboard/pets/');

@@ -97,30 +97,39 @@ def dashboard_pets(request):
     status = request.POST.get("status", "disponivel")
     foto = request.FILES.get("foto")
 
-    foto_url = None
-    if foto:
-        foto_url = upload_foto_supabase(foto)
-
-
+    
+    
+    
     if not nome or not sexo:
         return JsonResponse(
-            {"erro": "Nome e sexo são obrigatórios."},
-            status=400
-        )
-    
-
-    pet = Pet.objects.create(
-        nome=nome,
-        sexo=sexo,
-        idade=idade,
-        cor=cor,
-        descricao=descricao,
-        status=status,
-        foto_url=foto_url,
-        usuario_cadastro=request.user
+        {"erro": "Nome e sexo são obrigatórios."},
+        status=400
     )
 
-    return JsonResponse(pet_to_dict(pet, request), status=201)
+    try:
+        foto_url = None
+
+        if foto:
+            foto_url = upload_foto_supabase(foto)
+
+        pet = Pet.objects.create(
+            nome=nome,
+            sexo=sexo,
+            idade=idade,
+            cor=cor,
+            descricao=descricao,
+            status=status,
+            foto_url=foto_url,
+            usuario_cadastro=request.user
+        )
+
+        return JsonResponse(pet_to_dict(pet, request), status=201)
+
+    except Exception as erro:
+        return JsonResponse(
+            {"erro": str(erro)},
+            status=500
+    )
 
 
 @login_required
