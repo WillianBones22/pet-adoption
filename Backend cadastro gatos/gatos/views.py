@@ -24,7 +24,7 @@ def pet_to_dict(pet, request=None):
         "descricao": pet.descricao,
         "status": pet.status,
         "status_display": pet.get_status_display(),
-        "data_entrada": pet.data_entrada.strftime("%Y-%m-%d"),
+        "data_entrada": pet.data_entrada.strftime("%Y-%m-%d") if pet.data_entrada else None,
         "foto": pet.foto_url,
     }
 
@@ -142,7 +142,7 @@ def dashboard_pet_detalhe(request, pet_id):
     pet.status = data.get("status", pet.status)
 
     if request.FILES.get("foto"):
-        pet.foto = request.FILES.get("foto")
+        pet.foto_url = upload_foto_supabase(request.FILES.get("foto"))
 
     pet.save()
 
@@ -267,6 +267,15 @@ def upload_foto_supabase(arquivo):
     supabase_url = os.getenv("SUPABASE_URL")
     supabase_key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
     bucket = os.getenv("SUPABASE_BUCKET", "fotos-gatos")
+
+    if not supabase_url:
+        raise Exception("SUPABASE_URL não configurada.")
+
+    if not supabase_key:
+        raise Exception("SUPABASE_SERVICE_ROLE_KEY não configurada.")
+
+    if not bucket:
+        raise Exception("SUPABASE_BUCKET não configurado.")
 
     supabase = create_client(supabase_url, supabase_key)
 
