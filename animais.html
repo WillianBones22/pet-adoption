@@ -48,7 +48,13 @@
     </section>
 
     <script>
-      fetch('http://127.0.0.1:8000/api/gatos/')
+      //fetch('http://127.0.0.1:8000/api/gatos/')
+      const API_BASE_URL =
+        window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+          ? 'http://127.0.0.1:8000'
+          : 'https://larbastet.onrender.com';
+
+      fetch(`${API_BASE_URL}/api/gatos/`)
         .then(res => res.json())
         .then(gatos => {
           const grid = document.getElementById('cat-grid');
