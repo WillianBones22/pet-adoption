@@ -160,3 +160,9 @@ CORS_ALLOWED_ORIGINS = os.getenv(
     'http://localhost:8000,http://127.0.0.1:8000'
 ).split(',')
 #CORS_ALLOW_ALL_ORIGINS = True
+
+
+# redirecionamento do login para o dashboard, e do logout para a página de login
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
+LOGIN_URL = '/login/'
