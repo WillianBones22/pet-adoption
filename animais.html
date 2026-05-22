@@ -64,7 +64,11 @@
             const foto = gato.foto ? gato.foto : './src/img/imagemEx.jpg';
             grid.innerHTML += `
               <article class="cat-card">
-                <img src="${foto}" alt="Gato disponível">
+                <img 
+                  src="${foto}" 
+                  alt="${gato.nome || 'Gato disponível'}"
+                  onerror="this.src='./src/img/imagemEx.jpg'"
+                >
                 <div class="cat-card-content">
                   <div class="cat-card-header">
                     <h3>${sexo} · ${gato.cor}</h3>
